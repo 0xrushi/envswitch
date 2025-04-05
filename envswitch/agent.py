@@ -9,6 +9,7 @@ from openai import OpenAI
 import os
 import openai
 import json
+from rich.table import Table
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 console = Console()
@@ -254,7 +255,9 @@ class EnvSwitchAgent:
         
         if self.process_environment_switch():
             console.print(f"[blue]🔢 Total tokens used: {self.total_tokens}[/blue]")
-            if True:
+            if summary:
+                self.show_replacements_summary()
+            else:
                 self.show_diff()
             if write:
                 self.save()
@@ -274,3 +277,18 @@ class EnvSwitchAgent:
                 console.print(f"[red]{line}[/red]", end='')
             else:
                 console.print(line, end='')
+
+    def show_replacements_summary(self):
+        console.print("\n[bold cyan]📝 Replacements Summary:[/bold cyan]")
+        if not self.replacements:
+            console.print("[yellow]No replacements were made.[/yellow]")
+            return
+        
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Old Value", style="red")
+        table.add_column("New Value", style="green")
+        
+        for old, new in self.replacements:
+            table.add_row(old, new)
+        
+        console.print(table)
