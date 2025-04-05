@@ -57,7 +57,7 @@ class EnvSwitchAgent:
         User instruction: "{intent}"
         Available environments: {list(self.context_map.keys())}
 
-        Respond with just one of the environment names from the list above.
+        Respond with just one of the environment names from the list above. If they dont match, respond None.
         """
 
         try:
