@@ -155,7 +155,7 @@ class EnvSwitchAgent:
             else:
                 console.print("[yellow]⚠️ No changes made. LLM returned same content or failed.[/yellow]")
                 return False
-
+        return True
 
     def run(self, summary=True, write=False):
         console.print("[cyan]🤖 Starting EnvSwitchAgent[/cyan]")
