@@ -6,6 +6,14 @@ A CLI tool that intelligently switches environment configurations in files based
 
 EnvSwitch helps developers quickly switch between different environment configurations (dev, staging, production, etc.) in configuration files. It uses fuzzy matching and AI-powered intent recognition to understand what environment you want to switch to and makes the appropriate replacements.
 
+## When to Use EnvSwitch
+
+EnvSwitch is particularly useful in scenarios where:
+- You have a mix of hardcoded environment variables and actual environment variables
+- You're forced to use hardcoded values instead of environment variables due to system constraints
+- Manually switching between environment configurations is error-prone and time-consuming
+- You need to maintain multiple environment-specific configurations in your codebase
+
 ## Features
 
 - 🧠 AI-powered intent recognition
