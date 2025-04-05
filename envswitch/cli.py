@@ -16,7 +16,7 @@ def switch(
     context: str = typer.Argument(..., help="Path to context JSON"),
     intent: str = typer.Argument(..., help="Instruction (e.g. 'convert to staging')"),
     write: bool = typer.Option(False, "-w", "--write", help="Write changes to file"),
-    summary: bool = typer.Option(True, "--summary", help="Preview only"),
+    summary: bool = typer.Option(False, "-d", "--summary", help="Preview only"),
 ):
     """
     Switch environment configurations in a file based on context and intent.

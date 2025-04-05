@@ -8,6 +8,7 @@ from rich.syntax import Syntax
 from openai import OpenAI
 import os
 import openai
+import json
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 console = Console()
@@ -56,11 +57,102 @@ class EnvSwitchAgent:
         user_prompt = f"""
         User instruction: "{intent}"
         Available environments: {list(self.context_map.keys())}
+        Available enviornment map: {self.context_map}
 
-        Respond with just one of the environment names from the list above. If they dont match, respond None.
+        Respond with the user asked values in json only. 
+        If the user didnt specify any values, use all values for the environment.
+        
+        Example 1.:
+        User instruction: "convert to staging"
+        Available environments: ["dev", "staging"]
+        Available enviornment map: "dev": {{
+            "https://instagram.com": "backend",
+            "us-west-2": "REGION"
+        }},
+        "staging": {{
+            "https://facebook.com": "backend",
+            "us-east-1": "REGION"
+        }}
+
+        Respond with: {{
+        "dev": {{
+            "https://instagram.com": "backend",
+            "us-west-2": "REGION"
+        }},
+        "staging": {{
+            "https://facebook.com": "backend",
+            "us-east-1": "REGION"
+        }}
+        }}
+
+        Example 2.:
+        User instruction: "convert backend values to staging"
+        Available environments: ["dev", "staging"]
+        Available enviornment map: "dev": {{
+            "https://instagram.com": "backend",
+            "us-west-2": "REGION"
+        }},
+        "staging": {{
+            "https://facebook.com": "backend",
+            "us-east-1": "REGION"
+        }}
+
+        Respond with: {{
+            "dev": {{
+            "https://instagram.com": "backend",
+        }},
+        "staging": {{
+            "https://facebook.com": "backend",
+        }}
+        }}
+
+        Example 3.:
+        User instruction: "convert to staging and use host for staging as https://www.google.com"
+        Available environments: ["dev", "staging"]
+        Available enviornment map: "dev": {{
+            "https://instagram.com": "backend",
+            "us-west-2": "REGION"
+        }},
+        "staging": {{
+            "https://facebook.com": "backend",
+            "us-east-1": "REGION"
+        }}
+
+        Respond with: {{
+            "dev": {{
+            "https://instagram.com": "backend",
+        }},
+        "staging": {{
+            "https://www.google.com": "backend",
+        }}
+        }}
+
+        Respond only in JSON.
+        If there is no enviornment, respond None.
         """
 
         try:
+            response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                response_format={ "type": "json_object" }
+            )
+            self.total_tokens += response.usage.total_tokens
+            # console.print(f"[blue]ℹ Token usage: {response.usage.total_tokens}[/blue]")
+            result = response.choices[0].message.content.strip()
+            
+            self.context_map = json.loads(result)
+
+            user_prompt = f"""
+            User instruction: "{intent}"
+            Available environments: {list(self.context_map.keys())}
+
+            Respond with just one of the environment names from the list above. If they dont match, respond None.
+            """
+
             response = client.chat.completions.create(
                 model="gpt-4o",
                 messages=[
@@ -162,7 +254,7 @@ class EnvSwitchAgent:
         
         if self.process_environment_switch():
             console.print(f"[blue]🔢 Total tokens used: {self.total_tokens}[/blue]")
-            if summary:
+            if True:
                 self.show_diff()
             if write:
                 self.save()
