@@ -78,3 +78,7 @@ Each environment (e.g., "dev", "staging") contains key-value pairs where:
 
 - Python 3.9+
 - OpenAI API key (set as environment variable `OPENAI_API_KEY`)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
