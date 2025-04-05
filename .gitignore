@@ -1,0 +1,14 @@
+*.egg-info
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.whl
+*.bak
+*.bak.*
+*.orig
+*.rej
+*.swp
+*.swp.*
+*.swo

@@ -1,0 +1,15 @@
+{
+    "dev": {
+      "https://instagram.com": "backend",
+      "8080": "port",
+      "DEV": "env",
+      "instagfsblob.storage.azure.net": "blob"
+    },
+    "staging": {
+      "https://facebook.com": "backend",
+      "9090": "port",
+      "STAGING": "env",
+      "safacebookblob.storage.azure.net": "blob"
+    }
+  }
+  
