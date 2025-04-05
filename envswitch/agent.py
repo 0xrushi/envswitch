@@ -79,6 +79,37 @@ class EnvSwitchAgent:
         except Exception as e:
             console.print(f"[red]❌ LLM intent resolution failed: {e}[/red]")
             return None
+    
+    def query_llm_for_file_edit(self, intent: str) -> Optional[str]:
+        system_prompt = (
+            "You are a precise file editing agent.\n"
+            "Given a user instruction and the full file content, return the updated file.\n"
+            "Do not explain anything. Just return the modified file content as plain text."
+        )
+
+        user_prompt = f"""
+    User instruction:
+    {intent}
+
+    Original file:
+    {self.file_text}
+    """
+
+        try:
+            response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ]
+            )
+            self.total_tokens += response.usage.total_tokens
+            return response.choices[0].message.content.strip()
+
+        except Exception as e:
+            console.print(f"[red]❌ LLM file-edit failed: {e}[/red]")
+            return None
+
 
     def _apply_replacements(self):
         cur_map = self.context_map[self.current_env]
@@ -103,31 +134,28 @@ class EnvSwitchAgent:
     def process_environment_switch(self) -> bool:
         console.print(f"\n[bold yellow]🧠 Intent:[/bold yellow] {self.intent}")
         
-        # Determine target environment
         self.target_env = self.query_llm_for_env(self.intent)
-        if not self.target_env:
-            console.print("[red]❌ Could not determine target environment from intent.[/red]")
-            return False
-
-        # Detect current environment
-        self.current_env = self._detect_current_env()
-        if not self.current_env:
-            console.print("[red]❌ Could not detect current environment from file.[/red]")
-            return False
-
-        self._apply_replacements()
         
-        console.print(f"\n[bold yellow]🔄 Detected environment:[/bold yellow] {self.current_env}")
-        console.print(f"[bold green]➡ Switching to:[/bold green] {self.target_env}\n")
-        
-        if not self.replacements:
-            console.print("[yellow]⚠️ No changes needed. Already in target environment?[/yellow]")
-            return False
+        if self.target_env:
+            self.current_env = self._detect_current_env()
+            if not self.current_env:
+                console.print("[red]Could not detect current environment from file.[/red]")
+                return False
+            self._apply_replacements()
+            console.print(f"\n[bold yellow]🔄 Detected environment:[/bold yellow] {self.current_env}")
+            console.print(f"[bold green]➡ Switching to:[/bold green] {self.target_env}\n")
+        else:
+            # General agentic edit mode if environment not recognized
+            edited = self.query_llm_for_file_edit(self.intent)
+            if edited and edited != self.file_text:
+                self.updated_text = edited
+                self.replacements.append(("FULL FILE", "LLM Edit"))
+                console.print("[green]✅ File edited using LLM based on intent.[/green]")
+                return True
+            else:
+                console.print("[yellow]⚠️ No changes made. LLM returned same content or failed.[/yellow]")
+                return False
 
-        for old, new in self.replacements:
-            console.print(f"[red]- {old}[/red] ➜ [green]+ {new}[/green]")
-            
-        return True
 
     def run(self, summary=True, write=False):
         console.print("[cyan]🤖 Starting EnvSwitchAgent[/cyan]")
