@@ -38,19 +38,24 @@ pip install -e .
 ```bash
 # Basic usage
 envswitch <file> <context_json> "<intent>"
+```
 
-# Example
-envswitch tests/target_file_1.txt tests/context.json "convert to staging"
+## Example
+`envswitch tests/target_file_1.txt tests/context.json "convert to staging"`
+
 ![Screenshot 2025-04-05 at 10 57 40 AM](https://github.com/user-attachments/assets/51493b8a-8d38-4a4c-891e-1410c62aa470)
 
-envswitch tests/target_file_2.txt tests/context.json "convert to staging"
+`envswitch tests/target_file_2.txt tests/context.json "convert to staging"`
+
 ![image](https://github.com/user-attachments/assets/d54d00f6-4356-4a07-9d76-46676f120ed7)
 
 
-envswitch tests/target_file_3.txt tests/context.json "convert to staging"
+`envswitch tests/target_file_3.txt tests/context.json "convert to staging"`
+
 ![image](https://github.com/user-attachments/assets/b2e0c156-3d13-408a-a93e-21da65bdf3b0)
 
 
+```
 # With write option (default is summary only)
 envswitch tests/target_file_1.txt tests/context.json "switch to production" --write
 ```
