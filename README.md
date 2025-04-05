@@ -18,7 +18,7 @@ EnvSwitch helps developers quickly switch between different environment configur
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/envswitch.git
+git clone https://github.com/0xrushi/envswitch.git
 cd envswitch
 
 # Install the package
