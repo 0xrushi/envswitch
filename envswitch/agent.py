@@ -87,7 +87,7 @@ class EnvSwitchAgent:
 
         for old_val, label in cur_map.items():
             new_val = next((k for k, v in tgt_map.items() if v == label), None)
-            if not new_val:
+            if not new_val or old_val == new_val:
                 continue
 
             if old_val in self.updated_text:
@@ -98,6 +98,7 @@ class EnvSwitchAgent:
                 if fuzzy_match and fuzzy_match != new_val:
                     self.updated_text = self.updated_text.replace(fuzzy_match, new_val)
                     self.replacements.append((fuzzy_match, new_val))
+
 
     def process_environment_switch(self) -> bool:
         console.print(f"\n[bold yellow]🧠 Intent:[/bold yellow] {self.intent}")
