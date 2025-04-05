@@ -1,0 +1,65 @@
+// 🔒 Hardcoded config values (not from any external config)
+const BACKEND_URL = "https://instagram.com";
+const PORT = "8080";
+const ENV_NAME = "DEV";
+const BLOB_STORAGE_URL = "instagfsblob.storage.azure.net";
+const AWS = {
+  ACCESS_KEY_ID: "AKIA1234ABCD5678EFGH",
+  SECRET_ACCESS_KEY: "abcdef1234567890ABCDEF1234567890abcdef123",
+  SESSION_TOKEN:
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIn0",
+  REGION: "us-east-1",
+};
+
+// 🧠 Decode fake JWT (just the payload, no verification)
+function decodeJWT(token) {
+  try {
+    const payload = token.split('.')[1];
+    const decoded = Buffer.from(payload, 'base64').toString('utf-8');
+    return JSON.parse(decoded);
+  } catch (e) {
+    return { error: "Invalid token" };
+  }
+}
+
+// 🌐 Simulated API call
+async function callInstagramAPI(endpoint) {
+  const url = `${BACKEND_URL}/api/${endpoint}`;
+  console.log(`📡 GET ${url}`);
+  // Simulate network delay
+  await new Promise((res) => setTimeout(res, 500));
+  console.log(`✅ 200 OK: Fetched from ${url}`);
+}
+
+// ☁️ Simulated blob upload
+function uploadToBlobStorage(fileName, content) {
+  console.log(`📤 Uploading "${fileName}" to blob: ${BLOB_STORAGE_URL}`);
+  console.log(`📦 Content: "${content}"`);
+  console.log("✅ Upload complete.");
+}
+
+// 🔐 Simulated AWS session init
+function initializeAWSSession() {
+  console.log("🔐 Initializing AWS Session with:");
+  console.log(`   AccessKeyID: ${AWS.ACCESS_KEY_ID}`);
+  console.log(`   Region: ${AWS.REGION}`);
+  const decoded = decodeJWT(AWS.SESSION_TOKEN);
+  console.log(`   Token Payload:`, decoded);
+}
+
+// 🎯 Main entry point
+async function runApp() {
+  console.log(`🚀 Starting "${ENV_NAME}" app on port ${PORT}...`);
+
+  initializeAWSSession();
+
+  await callInstagramAPI("reels/trending");
+  await callInstagramAPI("stories/highlights");
+
+  uploadToBlobStorage("reel_clip.mp4", "binary-mock-data...");
+  uploadToBlobStorage("story_image.jpg", "jpeg-binary-blob...");
+}
+
+runApp().catch((err) => {
+  console.error("🔥 Unhandled error:", err);
+});

@@ -33,6 +33,8 @@ envswitch <file> <context_json> "<intent>"
 
 # Example
 envswitch tests/target_file_1.txt tests/context.json "convert to staging"
+envswitch tests/target_file_2.txt tests/context.json "convert to staging"
+envswitch tests/target_file_3.txt tests/context.json "convert to staging"
 
 # With write option (default is summary only)
 envswitch tests/target_file_1.txt tests/context.json "switch to production" --write

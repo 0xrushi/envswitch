@@ -1,15 +1,22 @@
 {
-    "dev": {
-      "https://instagram.com": "backend",
-      "8080": "port",
-      "DEV": "env",
-      "instagfsblob.storage.azure.net": "blob"
-    },
-    "staging": {
-      "https://facebook.com": "backend",
-      "9090": "port",
-      "STAGING": "env",
-      "safacebookblob.storage.azure.net": "blob"
-    }
+  "dev": {
+    "https://instagram.com": "backend",
+    "8080": "port",
+    "DEV": "env",
+    "instagfsblob.storage.azure.net": "blob",
+    "AKIA1234ABCD5678EFGH": "AWS_ACCESS_KEY_ID",
+    "abcdef1234567890ABCDEF1234567890abcdef123": "AWS_SECRET_ACCESS_KEY",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIn0": "AWS_SESSION_TOKEN",
+    "us-west-2": "REGION"
+  },
+  "staging": {
+    "https://facebook.com": "backend",
+    "9090": "port",
+    "STAGING": "env",
+    "safacebookblob.storage.azure.net": "blob",
+    "AKIA9876ZYXW5432VUTS": "AWS_ACCESS_KEY_ID",
+    "xyz987654321ABC987654321xyz987654321abc987": "AWS_SECRET_ACCESS_KEY",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ODc2NTQzMjEwIiwibmFtZSI6IkphbmUgRG9lIn0": "AWS_SESSION_TOKEN",
+    "us-east-1": "REGION"
   }
-  
+}
